@@ -1,6 +1,5 @@
 #! Load packages
 from __future__ import division
-from matplotlib.colors import NoNorm
 from scipy.linalg import circulant
 import numpy as np
 import seaborn as sns

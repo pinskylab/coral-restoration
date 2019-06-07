@@ -5,7 +5,6 @@ import seaborn as sns
 sns.set(style='ticks', palette='Paired')
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from matplotlib.colors import NoNorm
 import time
 import random
 from scipy.linalg import circulant

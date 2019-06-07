@@ -14,11 +14,6 @@
 # Name of the job as it appears in squeue
 #SBATCH --job-name=restoration
 
-#! DELLA
-# Load python 2.7
-module load python 
-module load anaconda
-
 # The first argument is the total number of cores you
 # want but we get it from a SLURM environment variable
 python routine.py
