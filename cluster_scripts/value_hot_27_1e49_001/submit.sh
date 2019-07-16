@@ -12,7 +12,6 @@
 #SBATCH -o %a.out
 #SBATCH -e %a.err
 
-
 # This is to get e-mail notifications
 # when the jobs start and end
 #SBATCH --mail-type=begin

@@ -12,7 +12,13 @@ import networkx as nx
 from functions import *
 
 #! SET THE NUMBER OF ITERATIONS
-iterations = 5 # Number of stochastic iterations
+iterations = 100 # Number of stochastic iterations
+
+#! RESTORATION PARAMETERS
+strategy = 'hot'#Which reefs to restore? Options: hot, cold, random
+trait_strategy = 'value' #What traits to send? Options: 'value', 'variance', 'percentile'
+value = 27 #For value strategy
+source_cover = np.array([1e-49,1e-49]) #Sets the fractional cover at restoration source sites
 
 #! GENERAL PARAMETERS
 nsp = 2 # Number of species in model
@@ -35,14 +41,10 @@ V = np.array([[0.01,0.01]])
 annual_temp_change = 0.011
 maxtemp = 32 #for sigmoid temperature increase scenario
 
-#! RESTORATION PARAMETERS
+#! OTHER RESTORATION PARAMETERS
 amount = 0.2 #Percentage of reefs to restore (no. of reefs to restore = size * amount)
-strategy = 'hot'#Which reefs to restore? Options: hot, cold, random
-trait_strategy = 'value' #What traits to send? Options: 'value', 'variance', 'percentile'
-value = 27 #For value strategy
 scaling_frac = 0.5 #For variance strategy
 percentile = 50 #For percentile strategy
-source_cover = np.array([1e-49,1e-49]) #Sets the fractional cover at restoration source sites
 restoration_years = list(range(runtime))
 
 #! Create multivariate normal covariance matrix for temperature anomalies

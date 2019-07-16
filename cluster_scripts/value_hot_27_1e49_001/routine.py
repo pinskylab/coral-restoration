@@ -212,10 +212,10 @@ if __name__ == '__main__':
         
     
 
-        np.save("./output/N0_"+P.trait_strategy+"_"+P.strategy+"_"+str(P.source_cover[0])+"_"+str(P.V[0][0])+"_"+str(seed)+".npy", N0)
-        np.save("./output/Z0_"+P.trait_strategy+"_"+P.strategy+"_"+str(P.source_cover[0])+"_"+str(P.V[0][0])+"_"+str(seed)+".npy", Z0)
-        np.save("./output/SST0"+P.trait_strategy+"_"+P.strategy+"_"+str(P.source_cover[0])+"_"+str(P.V[0][0])+"_"+str(seed)+".npy", SST_burnin)
+        np.save("N0_"+P.trait_strategy+"_"+P.strategy+"_"+P.value+"_"+str(P.source_cover[0])+"_"+str(P.V[0][0])+"_"+str(seed)+".npy", N0)
+        np.save("Z0_"+P.trait_strategy+"_"+P.strategy+"_"+P.value+"_"+str(P.source_cover[0])+"_"+str(P.V[0][0])+"_"+str(seed)+".npy", Z0)
+        np.save("SST0"+P.trait_strategy+"_"+P.strategy+"_"+P.value+"_"+str(P.source_cover[0])+"_"+str(P.V[0][0])+"_"+str(seed)+".npy", SST_burnin)
 
-        np.save("./output/N1_"+P.trait_strategy+"_"+P.strategy+"_"+str(P.source_cover[0])+"_"+str(P.V[0][0])+"_"+str(seed)+".npy", N1)
-        np.save("./output/Z1_"+P.trait_strategy+"_"+P.strategy+"_"+str(P.source_cover[0])+"_"+str(P.V[0][0])+"_"+str(seed)+".npy", Z1)
-        np.save("./output/SST1_"+P.trait_strategy+"_"+P.strategy+"_"+str(P.source_cover[0])+"_"+str(P.V[0][0])+"_"+str(seed)+".npy", SST_runtime)
+        np.save("N1_"+P.trait_strategy+"_"+P.strategy+"_"+P.value+"_"+str(P.source_cover[0])+"_"+str(P.V[0][0])+"_"+str(seed)+".npy", N1)
+        np.save("Z1_"+P.trait_strategy+"_"+P.strategy+"_"+P.value+"_"+str(P.source_cover[0])+"_"+str(P.V[0][0])+"_"+str(seed)+".npy", Z1)
+        np.save("SST1_"+P.trait_strategy+"_"+P.strategy+"_"+P.value+"_"+str(P.source_cover[0])+"_"+str(P.V[0][0])+"_"+str(seed)+".npy", SST_runtime)
