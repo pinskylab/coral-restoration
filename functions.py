@@ -464,6 +464,137 @@ def coral_restore_fun(param,spp_state,trait_state,temps,anomalies,algaemort_full
     
     return N_ALL, Z_ALL, SST_matrix
     
+def coral_restore_fun2(param,spp_state,trait_state,temps,anomalies,algaemort_full,temp_change="constant",
+                       burnin=True):
+    nsp = param['nsp']
+    size0 = param['size']
+    time_steps = param['time_steps']
+    species_type = param['species_type']
+    r_max = param['r_max']
+    V = param['V']
+    D0 = param['D0']
+    D1 = param['D1']
+    beta = param['beta']
+    m_const = param['m_const']
+    w = param['w']
+    alphas = param['alphas']
+    mpa_status = param['mpa_status']
+    mortality_model = param['mortality_model']
+    maxtemp = param['maxtemp']
+    annual_temp_change = param['annual_temp_change']
+    timemod = param['timemod']
+    restoration_years = param['restoration_years']
+    source_cover = param['source_cover']
+    trait_strategy = param['trait_strategy']
+    value = param['value']
+    scaling_frac = param['scaling_frac']
+    percentile = param['percentile']
+    num_restore = param['num_restore']
+    restore_array = param['restore_array']
+        
+    size = size0 + num_restore #to account for restoration reef
+    
+    SST_matrix = np.zeros([size,time_steps])
+    SST_matrix[:,0] = temps + anomalies[:,0]
+    dtemp_array = np.zeros([time_steps])
+    
+    for i in np.arange(1, time_steps):
+        if temp_change == "sigmoid":
+            temps =  SST_matrix[:,i-1] 
+            dtemp1 = annual_temp_change*temps.mean()
+            dtemp2 = 1-(temps.mean()/maxtemp)
+            dtemp = np.repeat(dtemp1*dtemp2, size)
+            SST_matrix[:,i] = SST_matrix[:,i-1] + dtemp
+            
+        if temp_change == "constant":
+            dtemp = np.repeat(0, size)
+            SST_matrix[:,i] = SST_matrix[:,i-1] + dtemp
+            
+        if temp_change == "linear":
+            dtemp = np.repeat(annual_temp_change, size)
+            SST_matrix[:,i] = SST_matrix[:,i-1] + dtemp
+        
+    SST_matrix =  SST_matrix + anomalies
+    
+    N_ALL = np.zeros((size,nsp,time_steps))
+    Z_ALL = np.zeros((size,nsp,time_steps))
+    N_ALL[:,:,0] = spp_state
+    Z_ALL[:,:,0] = trait_state
+
+    algaemort_sub = algaemort_full[:,timemod:timemod+time_steps]
+    tick = 0
+    
+    if burnin:
+        print "BURNIN"
+        D = D0 #No restoration, always use baseline connectivity matrix
+        # Second-order Runge Kutta solver
+        for i in np.arange(0,time_steps-1):
+            alg_mort = algaemort_sub[:,i]
+            dN1 = dNdt_fun(r_max,SST_matrix[:,tick],Z_ALL[:,:,tick],w,alphas,species_type,mpa_status,
+                             N_ALL[:,:,tick],m_const,mortality_model,alg_mort,V,D,beta)
+            dZ1 = dZdt_fun(r_max,SST_matrix[:,tick],Z_ALL[:,:,tick],w,alphas,species_type,mpa_status,
+                            N_ALL[:,:,tick],m_const,mortality_model,alg_mort,V,D,beta)
+
+            N_ALL_1 = N_ALL[:,:,tick] + dN1*0.5
+            Z_ALL_1 = Z_ALL[:,:,tick]  + dZ1*0.5
+
+            dN2 = dNdt_fun(r_max,SST_matrix[:,tick],Z_ALL_1,w,alphas,species_type,mpa_status,
+                             N_ALL_1,m_const,mortality_model,alg_mort,V,D,beta)
+            dZ2 = dZdt_fun(r_max,SST_matrix[:,tick],Z_ALL_1,w,alphas,species_type,mpa_status,
+                            N_ALL_1,m_const,mortality_model,alg_mort,V,D,beta)
+ 
+            N_ALL[:,:,tick+1] = N_ALL[:,:,tick] + (dN1 + dN2)/2
+            Z_ALL[:,:,tick+1] = Z_ALL[:,:,tick] + (dZ1 + dZ2)/2
+            
+            #! CURRENTLY WORKING ON THE FOLLOWING LINES:
+            #! Calls the function that sets trait restoration
+            trait_restore = set_trait_fun(Z_ALL[:,:,tick+1], V, num_restore, restore_array, trait_strategy, value, scaling_frac, percentile)
+
+            # Keep restoration reef (last reef) at constant N with 100% of all species:
+            N_ALL[-num_restore:,:,tick+1] = source_cover
+            Z_ALL[-num_restore:,:,tick+1] = trait_restore
+            
+            tick += 1
+            
+    else: #For future/restoration scenarios
+        print "RUNTIME"
+        # Second-order Runge Kutta solver
+        for i in np.arange(0,time_steps-1):
+            alg_mort = algaemort_sub[:,i]
+            
+            if tick in restoration_years:
+                D=D1
+            else:
+                D=D0
+            
+            dN1 = dNdt_fun(r_max,SST_matrix[:,tick],Z_ALL[:,:,tick],w,alphas,species_type,mpa_status,
+                             N_ALL[:,:,tick],m_const,mortality_model,alg_mort,V,D,beta)
+            dZ1 = dZdt_fun(r_max,SST_matrix[:,tick],Z_ALL[:,:,tick],w,alphas,species_type,mpa_status,
+                            N_ALL[:,:,tick],m_const,mortality_model,alg_mort,V,D,beta)
+
+            N_ALL_1 = N_ALL[:,:,tick] + dN1*0.5
+            Z_ALL_1 = Z_ALL[:,:,tick]  + dZ1*0.5
+
+            dN2 = dNdt_fun(r_max,SST_matrix[:,tick],Z_ALL_1,w,alphas,species_type,mpa_status,
+                             N_ALL_1,m_const,mortality_model,alg_mort,V,D,beta)
+            dZ2 = dZdt_fun(r_max,SST_matrix[:,tick],Z_ALL_1,w,alphas,species_type,mpa_status,
+                            N_ALL_1,m_const,mortality_model,alg_mort,V,D,beta)
+
+            N_ALL[:,:,tick+1] = N_ALL[:,:,tick] + (dN1 + dN2)/2
+            Z_ALL[:,:,tick+1] = Z_ALL[:,:,tick] + (dZ1 + dZ2)/2
+            
+            #! CURRENTLY WORKING ON THE FOLLOWING LINES:
+            #! Calls the function that sets trait restoration
+            trait_restore = set_trait_fun(Z_ALL[:,:,tick+1], V, num_restore, restore_array, trait_strategy, value, scaling_frac, percentile)
+            # Keep restoration reef (last reef) at constant N with 100% of all species:
+            N_ALL[-num_restore:,:,tick+1] = source_cover
+            Z_ALL[-num_restore:,:,tick+1] = trait_restore
+
+            tick += 1
+    
+    return N_ALL, Z_ALL, SST_matrix
+    
+    
 #! Function that modifies a connectivity matrix to "bias" the diagonal
 def bias_diagonal(A, alpha):
     I = np.identity(A.shape[0])
