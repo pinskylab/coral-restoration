@@ -19,6 +19,8 @@ strategy = 'hot'#Which reefs to restore? Options: hot, cold, random
 trait_strategy = 'value' #What traits to send? Options: 'value', 'variance', 'percentile'
 value = 27 #For value strategy
 source_cover = np.array([1e-49,1e-49]) #Sets the fractional cover at restoration source sites
+mpa_amount = 0.2
+mpa_strategy = 'none'
 
 #! GENERAL PARAMETERS
 nsp = 2 # Number of species in model

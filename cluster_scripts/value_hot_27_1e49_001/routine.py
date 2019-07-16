@@ -111,7 +111,7 @@ if __name__ == '__main__':
         trait_state_restore[-num_restore:,:] = 35
         #shape: number of reefs x number of species
 
-        mpa_status = set_MPA_fun(SST0,spp_state,P.species_type,P.size,amount=0.2,strategy='none')
+        mpa_status = set_MPA_fun(SST0,spp_state,P.species_type,P.size,amount=P.mpa_amount,strategy='none')
         mpa_status_restore = np.ones((mpa_status.shape[0],mpa_status.shape[1]+num_restore))
         mpa_status_restore[:,:-num_restore] = mpa_status
         mpa_status_restore[:,-num_restore:] = mpa_status[:,-1]
@@ -165,7 +165,7 @@ if __name__ == '__main__':
         # Note: the code does NOT like having a zero value in one of these; use 1e-6 to approximate zero
 
         #runtime parameters: all restoration years
-        mpa_status = set_MPA_fun(SST0,spp_state,P.species_type,P.size,amount=0.2,strategy='none')
+        mpa_status = set_MPA_fun(SST0,spp_state,P.species_type,P.size,amount=P.mpa_amount,strategy=P.mpa_strategy)
         time_steps = P.runtime
 
         # This is where you tell the model when to use the restoration matrix; we can write 
