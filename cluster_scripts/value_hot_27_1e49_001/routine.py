@@ -219,3 +219,4 @@ if __name__ == '__main__':
         np.save("N1_"+P.trait_strategy+"_"+P.strategy+"_"+str(P.value)+"_"+str(P.source_cover[0])+"_"+str(P.V[0][0])+"_"+str(seed)+".npy", N1)
         np.save("Z1_"+P.trait_strategy+"_"+P.strategy+"_"+str(P.value)+"_"+str(P.source_cover[0])+"_"+str(P.V[0][0])+"_"+str(seed)+".npy", Z1)
         np.save("SST1_"+P.trait_strategy+"_"+P.strategy+"_"+str(P.value)+"_"+str(P.source_cover[0])+"_"+str(P.V[0][0])+"_"+str(seed)+".npy", SST_runtime)
+        np.save("restore_status_"+P.trait_strategy+"_"+P.strategy+"_"+str(P.value)+"_"+str(P.source_cover[0])+"_"+str(P.V[0][0])+"_"+str(seed)+".npy", restore_status)
