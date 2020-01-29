@@ -150,6 +150,7 @@ if __name__ == '__main__':
                             'value': P.value,
                             'scaling_frac': P.scaling_frac,
                             'percentile': P.percentile,
+                            'trait_increase': P.trait_increase,
                             'num_restore': num_restore,
                             'restore_array': restore_array
                             }
@@ -199,6 +200,7 @@ if __name__ == '__main__':
                             'value': P.value,
                             'scaling_frac': P.scaling_frac,
                             'percentile': P.percentile,
+                            'trait_increase': P.trait_increase,
                             'num_restore': num_restore,
                             'restore_array': restore_array
                             }               

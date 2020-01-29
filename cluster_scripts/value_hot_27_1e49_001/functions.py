@@ -319,7 +319,7 @@ def set_restore_fun(temps,N_all,species_type,size,amount=1.0,strategy='random'):
     return np.array([restore_sites])    
     
 #! Set restoration trait value
-def set_trait_fun(Z_all, V, num_restore, restore_array, strategy='value',value=25, scaling_frac=0.5, percentile=50):
+def set_trait_fun(Z_all, V, num_restore, restore_array, strategy='value',value=25, scaling_frac=0.5, percentile=50, trait_increase=0):
     Z_rest = np.zeros((num_restore,Z_all.shape[1]))
     
     if strategy == 'value':
@@ -329,6 +329,8 @@ def set_trait_fun(Z_all, V, num_restore, restore_array, strategy='value',value=2
     elif strategy == 'percentile':
         for i in np.arange(0,Z_all.shape[1]):
             Z_rest[i] = np.percentile(Z_all[:-num_restore,i], percentile)
+    elif trait_strategy == 'constant_increase':
+        Z_rest = Z_all[restore_array] + trait_increase
 
     return Z_rest
     
@@ -359,6 +361,7 @@ def coral_restore_fun(param,spp_state,trait_state,temps,anomalies,algaemort_full
     value = param['value']
     scaling_frac = param['scaling_frac']
     percentile = param['percentile']
+    trait_increase = param['trait_increase']
     num_restore = param['num_restore']
     restore_array = param['restore_array']
         
@@ -418,7 +421,7 @@ def coral_restore_fun(param,spp_state,trait_state,temps,anomalies,algaemort_full
             
             #! CURRENTLY WORKING ON THE FOLLOWING LINES:
             #! Calls the function that sets trait restoration
-            trait_restore = set_trait_fun(Z_ALL[:,:,tick+1], V, num_restore, restore_array, trait_strategy, value, scaling_frac, percentile)
+            trait_restore = set_trait_fun(Z_ALL[:,:,tick+1], V, num_restore, restore_array, trait_strategy, value, scaling_frac, percentile, trait_increase)
 
             # Keep restoration reef (last reef) at constant N with 100% of all species:
             N_ALL[-num_restore:,:,tick+1] = source_cover
@@ -455,7 +458,7 @@ def coral_restore_fun(param,spp_state,trait_state,temps,anomalies,algaemort_full
             
             #! CURRENTLY WORKING ON THE FOLLOWING LINES:
             #! Calls the function that sets trait restoration
-            trait_restore = set_trait_fun(Z_ALL[:,:,tick+1], V, num_restore, restore_array, trait_strategy, value, scaling_frac, percentile)
+            trait_restore = set_trait_fun(Z_ALL[:,:,tick+1], V, num_restore, restore_array, trait_strategy, value, scaling_frac, percentile, trait_increase)
             # Keep restoration reef (last reef) at constant N with 100% of all species:
             N_ALL[-num_restore:,:,tick+1] = source_cover
             Z_ALL[-num_restore:,:,tick+1] = trait_restore
@@ -489,6 +492,7 @@ def coral_restore_fun2(param,spp_state,trait_state,temps,anomalies,algaemort_ful
     value = param['value']
     scaling_frac = param['scaling_frac']
     percentile = param['percentile']
+    trait_increase = param['trait_increase']
     num_restore = param['num_restore']
     restore_array = param['restore_array']
         
@@ -548,7 +552,7 @@ def coral_restore_fun2(param,spp_state,trait_state,temps,anomalies,algaemort_ful
             
             #! CURRENTLY WORKING ON THE FOLLOWING LINES:
             #! Calls the function that sets trait restoration
-            trait_restore = set_trait_fun(Z_ALL[:,:,tick+1], V, num_restore, restore_array, trait_strategy, value, scaling_frac, percentile)
+            trait_restore = set_trait_fun(Z_ALL[:,:,tick+1], V, num_restore, restore_array, trait_strategy, value, scaling_frac, percentile, trait_increase)
 
             # Keep restoration reef (last reef) at constant N with 100% of all species:
             N_ALL[-num_restore:,:,tick+1] = source_cover
@@ -585,7 +589,7 @@ def coral_restore_fun2(param,spp_state,trait_state,temps,anomalies,algaemort_ful
             
             #! CURRENTLY WORKING ON THE FOLLOWING LINES:
             #! Calls the function that sets trait restoration
-            trait_restore = set_trait_fun(Z_ALL[:,:,tick+1], V, num_restore, restore_array, trait_strategy, value, scaling_frac, percentile)
+            trait_restore = set_trait_fun(Z_ALL[:,:,tick+1], V, num_restore, restore_array, trait_strategy, value, scaling_frac, percentile, trait_increase)
             # Keep restoration reef (last reef) at constant N with 100% of all species:
             N_ALL[-num_restore:,:,tick+1] = source_cover
             Z_ALL[-num_restore:,:,tick+1] = trait_restore

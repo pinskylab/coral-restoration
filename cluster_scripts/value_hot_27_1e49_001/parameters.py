@@ -48,6 +48,7 @@ amount = 0.2 #Percentage of reefs to restore (no. of reefs to restore = size * a
 scaling_frac = 0.5 #For variance strategy
 percentile = 50 #For percentile strategy
 restoration_years = list(range(runtime))
+trait_increase = 1.
 
 #! Create multivariate normal covariance matrix for temperature anomalies
 mdim = size 
